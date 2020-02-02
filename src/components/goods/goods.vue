@@ -1,8 +1,8 @@
 <template>
   <div class="goods">
-    <div class="scroll-nav-warpper">
+    <div class="scroll-nav-wrapper">
       <cube-scroll-nav
-        :side=true
+        :side="true"
         :data="goods"
         :options="scrollOptions"
         v-if="goods.length"
@@ -40,14 +40,21 @@
         </cube-scroll-nav-panel>
       </cube-scroll-nav>
     </div>
+    <div class="shop-cart-wrapper">
+      <shopCart
+       :deliveryPrice= "seller.deliveryPrice"
+       :minPrice= "seller.minPrice"
+      ></shopcart>
+    </div>
   </div>
 </template>
 
 <script>
 import { getGoods } from 'api'
+import shopCart from 'components/shop-cart/shop-cart'
 export default {
   name: 'goods',
-  components: {},
+  components: { shopCart },
   props: {
     data: {
        type: Object,
@@ -66,7 +73,11 @@ export default {
     }
   },
   watch: {},
-  computed: {},
+  computed: {
+    seller() {
+      return this.data.seller
+    }
+  },
   methods: {
     fetch() {
          getGoods().then((goods) => {

@@ -2,14 +2,13 @@
   <div class="shopcart">
     <div class="content">
       <div class="content-left">
-        <div class="loge-wrapper">
-          <div class="logo"
-               :class="{'highlight':totalCount>0}">
-            <i class="icon-shopping_cart"
-               :class="{'highlight':totalCount>0}"></i>
-          </div>
+        <div class="logo-wrapper">
+           <div class="logo" :class="{'highlight':totalCount>0}">
+              <i class="icon-shopping_cart" :class="{'highlight':totalCount>0}"></i>
+            </div>
           <div class="num"
                v-show="totalCount>0">
+               <bubble :num="totalCount"></bubble>
           </div>
         </div>
         <div class="price"
@@ -27,9 +26,10 @@
 </template>
 
 <script>
+import Bubble from 'components/bubble/bubble'
 export default {
   name: 'shop-cart',
-  components: {},
+  components: { Bubble },
   props: {
     selectFoods: {
       type: Array,
@@ -53,9 +53,10 @@ export default {
   watch: {},
   computed: {
     totalPrice () {
+      console.log(this.selectFoods)
       let total = 0
       this.selectFoods.forEach((food) => {
-        total += food.proce * food.count
+        total += food.price * food.count
       })
       return total
     },
@@ -90,7 +91,7 @@ export default {
 }
 </script>
 <style lang="stylus" scoped>
- @import "~common/stylus/mixin"
+  @import "~common/stylus/mixin"
   @import "~common/stylus/variable"
 
   .shopcart

@@ -5,6 +5,26 @@
                        :data="goods"
                        :options="scrollOptions"
                        v-if="goods.length">
+        <template slot="bar"
+                  slot-scope="props">
+          <cube-scroll-nav-bar direction="vertical"
+                               :labels='props.labels'
+                               :txts='barTxts'
+                               :current="props.current">
+                          <template slot-scope="props">
+                            <div class="text">
+                              <supportIco v-if="props.txt.type>=1"
+                                :size=3
+                                :type="props.txt.type"
+                                ></supportIco>
+                                <span>{{props.txt.name}}</span>
+                                <span class="num" v-if="props.txt.count">
+                                     <bubble :num="props.txt.count"></bubble>
+                                </span>
+                            </div>
+                             </template>
+             </cube-scroll-nav-bar>
+        </template>
         <cube-scroll-nav-panel v-for="good in goods"
                                :key="good.name"
                                :label="good.name"
@@ -30,7 +50,8 @@
                         class="old">￥{{food.oldPrice}}</span>
                 </div>
                 <div class="cart-control-wrapper">
-                  <cart-control  :food="food"></cart-control>
+                  <cart-control :food="food"
+                                @add="onAdd"></cart-control>
                 </div>
               </div>
             </li>
@@ -42,7 +63,7 @@
       <shopCart :deliveryPrice="seller.deliveryPrice"
                 :minPrice="seller.minPrice"
                 :selectFoods="selectFoods"
-                ></shopcart>
+                ref='shopCart'></shopcart>
     </div>
   </div>
 </template>
@@ -51,9 +72,11 @@
 import { getGoods } from 'api'
 import shopCart from 'components/shop-cart/shop-cart'
 import CartControl from 'components/cart-control/cart-control'
+import supportIco from 'components/support-ico/support-ico'
+import bubble from 'components/bubble/bubble'
 export default {
   name: 'goods',
-  components: { shopCart, CartControl },
+  components: { shopCart, CartControl, supportIco, bubble },
   props: {
     data: {
       type: Object,
@@ -73,15 +96,36 @@ export default {
   },
   watch: {},
   computed: {
+    // 说了半天实际上就是原理给的一个数组对象不行 需要把数组重新成对象
+    barTxts () {
+      let ret = []
+      console.log(this.goods, '我是goods')
+      this.goods.forEach((good) => {
+        const { type, name, foods } = good
+        console.log(good, '我是good')
+        let count = 0
+        foods.forEach((food) => {
+          count += food.count || 0
+        })
+        ret.push({
+          type, name, count
+        })
+       console.log(ret, '我是ret')
+      })
+      return ret
+    },
+
     seller () {
       return this.data.seller
     },
     selectFoods () {
       let ret = []
+      console.log(this.good, '我是goods')
       this.goods.forEach((good) => {
         good.foods.forEach((food) => {
           if (food.count) {
             ret.push(food)
+            console.log(event)
           }
         })
       })
@@ -94,6 +138,13 @@ export default {
         this.goods = goods
         console.log('获取到了', goods)
       })
+    },
+    onAdd (el) {
+      // 这个函数把goods元素的组件中的DOM 就是el 传给了子元素的drop 方法 就是refs 中的shopCart 组件等于是兄弟组件进行了通信
+      // 从cart-control组件开始,子组件触发了父组件的OnAdd方法，父组件中通过el对象的add方法在使用父调用子组件的ref方法父调用了
+      // 子组件的shopCart 方法并把 cart-control的dom作为数据给了shopCart元素
+      // console.log(el)
+      this.$refs.shopCart.drop(el)
     }
   },
   created () { },

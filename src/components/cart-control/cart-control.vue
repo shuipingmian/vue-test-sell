@@ -15,6 +15,7 @@
 </template>
 
 <script>
+const EVENT_ADD = 'add'
 export default {
   name: 'cartcontrol',
   components: {},
@@ -30,12 +31,13 @@ export default {
   watch: {},
   computed: {},
   methods: {
-    add () {
+    add (event) {
       if (!this.food.count) {
         this.$set(this.food, 'count', 1)
       } else {
         this.food.count++
       }
+      this.$emit(EVENT_ADD, event.target)
     },
     decrease () {
       if (this.food.count) {

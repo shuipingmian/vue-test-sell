@@ -20,7 +20,8 @@
       </div>
       <div class="content-right">
         <div class="pay"
-             :class="payClass">
+             :class="payClass"
+             @click.stop="pay">
           {{payDesc}}
         </div>
       </div>
@@ -190,13 +191,19 @@ export default {
         $events: {
           hide: () => {
             this.listFold = true
+          },
+          leave: () => {
+            this._hideShopCartSticky()
+          },
+          add: (el) => {
+             this.shopCartStickyComp.drop(el)
           }
         }
       })
       this.shopCartListComp.show()
     },
     _showShopCartSticky () {
-      this.shopCartStickyComp = this.shopCartStickyComp || this.$createShopCartList({
+      this.shopCartStickyComp = this.shopCartStickyComp || this.$createShopCartSticky({
         $props: {
           selectFoods: 'selectFoods',
           deliveryPrice: 'deliveryPrice',
@@ -212,6 +219,8 @@ export default {
       list.hide && list.hide()
     },
     _hideShopCartSticky () {
+      // const comp = this.sticky ? this.$parent.list : this.shopCartListComp
+      // comp.hide && comp.hide()
       this.shopCartStickyComp.hide()
     }
   },

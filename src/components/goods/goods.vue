@@ -11,19 +11,19 @@
                                :labels='props.labels'
                                :txts='barTxts'
                                :current="props.current">
-                          <template slot-scope="props">
-                            <div class="text">
-                              <supportIco v-if="props.txt.type>=1"
-                                :size=3
-                                :type="props.txt.type"
-                                ></supportIco>
-                                <span>{{props.txt.name}}</span>
-                                <span class="num" v-if="props.txt.count">
-                                     <bubble :num="props.txt.count"></bubble>
-                                </span>
-                            </div>
-                             </template>
-             </cube-scroll-nav-bar>
+            <template slot-scope="props">
+              <div class="text">
+                <supportIco v-if="props.txt.type>=1"
+                            :size=3
+                            :type="props.txt.type"></supportIco>
+                <span>{{props.txt.name}}</span>
+                <span class="num"
+                      v-if="props.txt.count">
+                  <bubble :num="props.txt.count"></bubble>
+                </span>
+              </div>
+            </template>
+          </cube-scroll-nav-bar>
         </template>
         <cube-scroll-nav-panel v-for="good in goods"
                                :key="good.name"
@@ -110,7 +110,7 @@ export default {
         ret.push({
           type, name, count
         })
-       console.log(ret, '我是ret')
+        console.log(ret, '我是ret')
       })
       return ret
     },
@@ -134,10 +134,12 @@ export default {
   },
   methods: {
     fetch () {
-      getGoods().then((goods) => {
-        this.goods = goods
-        console.log('获取到了', goods)
-      })
+      if (!this.fetched) {
+        this.fetched = true
+        getGoods().then((goods) => {
+          this.goods = goods
+        })
+      }
     },
     onAdd (el) {
       // 这个函数把goods元素的组件中的DOM 就是el 传给了子元素的drop 方法 就是refs 中的shopCart 组件等于是兄弟组件进行了通信

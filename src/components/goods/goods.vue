@@ -1,7 +1,7 @@
 <template>
   <div class="goods">
     <div class="scroll-nav-wrapper">
-      <cube-scroll-nav :side="true"
+      <cube-scroll-nav :side=true
                        :data="goods"
                        :options="scrollOptions"
                        v-if="goods.length">
@@ -32,7 +32,8 @@
           <ul>
             <li v-for="food in good.foods"
                 :key=food.name
-                class="food-item">
+                class="food-item"
+                @click="selectFood(food)">
               <div class="icon">
                 <img width="57"
                      height="57"
@@ -50,8 +51,8 @@
                         class="old">￥{{food.oldPrice}}</span>
                 </div>
                 <div class="cart-control-wrapper">
-                  <cart-control :food="food"
-                                @add="onAdd"></cart-control>
+                  <CartControl :food="food"
+                                @add="onAdd"></CartControl>
                 </div>
               </div>
             </li>
@@ -88,6 +89,7 @@ export default {
   data () {
     return {
       goods: [],
+      selectedFood: {},
       scrollOptions: {
         click: false,
         directionLockThreshold: 0
@@ -102,7 +104,6 @@ export default {
       console.log(this.goods, '我是goods')
       this.goods.forEach((good) => {
         const { type, name, foods } = good
-        console.log(good, '我是good')
         let count = 0
         foods.forEach((food) => {
           count += food.count || 0
@@ -110,7 +111,6 @@ export default {
         ret.push({
           type, name, count
         })
-        console.log(ret, '我是ret')
       })
       return ret
     },
@@ -133,24 +133,60 @@ export default {
     }
   },
   methods: {
-    fetch () {
+        fetch () {
       if (!this.fetched) {
         this.fetched = true
-        getGoods().then((goods) => {
+        getGoods({
+          id: this.seller.id
+        }).then((goods) => {
           this.goods = goods
         })
       }
     },
-    onAdd (el) {
+     selectFood (food) {
+      this.selectedFood = food
+      this._showFood()
+      this._showShopCartSticky()
+    },
+     onAdd (el) {
       // 这个函数把goods元素的组件中的DOM 就是el 传给了子元素的drop 方法 就是refs 中的shopCart 组件等于是兄弟组件进行了通信
       // 从cart-control组件开始,子组件触发了父组件的OnAdd方法，父组件中通过el对象的add方法在使用父调用子组件的ref方法父调用了
       // 子组件的shopCart 方法并把 cart-control的dom作为数据给了shopCart元素
       // console.log(el)
       this.$refs.shopCart.drop(el)
-    }
+    },
+    _showFood () {
+      this.foodComp = this.foodComp || this.$createFood({
+        $props: {
+          food: 'selectedFood'
+        },
+        $events: {
+          add: (target) => {
+            this.shopCartStickyComp.drop(target)
+          },
+          leave: () => {
+            this._hideShopCartSticky()
+          }
+        }
+      })
+      this.foodComp.show()
+    },
+    _showShopCartSticky () {
+      this.shopCartStickyComp = this.shopCartStickyComp || this.$createShopCartSticky({
+        $props: {
+          selectFoods: 'selectFoods',
+          deliveryPrice: this.seller.deliveryPrice,
+          minPrice: this.seller.minPrice,
+          fold: true
+        }
+      })
+      this.shopCartStickyComp.show()
+    },
+     _hideShopCartSticky() {
+        this.shopCartStickyComp.hide()
+      }
   },
-  created () { },
-  mounted () { }
+  created () { }
 }
 </script>
 <style lang="stylus" scoped>

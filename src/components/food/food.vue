@@ -23,8 +23,8 @@
                     v-show="food.oldPrice">￥{{food.oldPrice}}</span>
             </div>
             <div class="cart-control-wrapper">
-            <CartControl @add="addFood"
-                            :food="food"></CartControl>
+              <CartControl @add="addFood"
+                           :food="food"></CartControl>
             </div>
             <transition name="fade">
               <div @click="addFirst"
@@ -43,13 +43,13 @@
           <split></split>
           <div class="rating">
             <h1 class="title">商品评价</h1>
-            <!-- <rating-select @select="onSelect"
+            <rating-select @select="onSelect"
                            @toggle="onToggle"
                            :selectType="selectType"
                            :onlyContent="onlyContent"
                            :desc="desc"
                            :ratings="ratings">
-            </rating-select> -->
+            </rating-select>
             <div class="rating-wrapper">
               <ul v-show="computedRatings && computedRatings.length">
                 <li v-for="(rating,index) in computedRatings"
@@ -81,7 +81,7 @@
 <script type="text/ecmascript-6">
 import moment from 'moment'
 import CartControl from 'components/cart-control/cart-control'
-// import RatingSelect from 'components/rating-select/rating-select'
+import RatingSelect from 'components/rating-select/rating-select'
 import Split from 'components/split/spilt'
 import ratingMixin from 'common/mixins/rating'
 import popupMixin from 'common/mixins/popup'
@@ -89,7 +89,7 @@ import popupMixin from 'common/mixins/popup'
 const EVENT_SHOW = 'show'
 const EVENT_ADD = 'add'
 const EVENT_LEAVE = 'leave'
-
+const ALL = 2
 export default {
   name: 'food',
   mixins: [ratingMixin, popupMixin],
@@ -100,6 +100,8 @@ export default {
   },
   data () {
     return {
+      onlyContent: true,
+      selectType: ALL,
       desc: {
         all: '全部',
         positive: '推荐',
@@ -112,6 +114,18 @@ export default {
       return this.food.ratings
     }
   },
+  computedRatings () {
+    let ret = []
+    this.ratings.forEach((rating) => {
+      if (this.onlyContent && !rating.text) {
+        return
+      }
+      if (this.selectType === ALL || this.selectType === rating.rateType) {
+        ret.push(rating)
+      }
+    })
+    return ret
+  },
   created () {
     this.$on(EVENT_SHOW, () => {
       this.$nextTick(() => {
@@ -122,6 +136,12 @@ export default {
   methods: {
     afterLeave () {
       this.$emit(EVENT_LEAVE)
+    },
+    onSelect (type) {
+      this.selectType = type
+    },
+    onToggle () {
+      this.onlyContent = !this.onlyContent
     },
     addFirst (event) {
       this.$set(this.food, 'count', 1)
@@ -136,7 +156,7 @@ export default {
   },
   components: {
     CartControl,
-    // RatingSelect,
+    RatingSelect,
     Split
   }
 }

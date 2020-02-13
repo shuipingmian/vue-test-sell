@@ -4,13 +4,13 @@ const appData = require('./data.json')
 const seller = appData.seller
 const goods = appData.goods
 const ratings = appData.ratings
-
 function resolve(dir) {
   return path.join(__dirname, dir)
 }
 
 
 module.exports = {
+  publicPath: './',
   css: {
     loaderOptions: {
       stylus: {
@@ -23,16 +23,18 @@ module.exports = {
   },
   pluginOptions: {
     'cube-ui': {
-      postCompile: false,
-      theme: false
+      postCompile: true,
+      theme: true
     }
   },
   devServer: {
     before(app) {
       app.get('/api/seller', function (req, res) {
+        const id = req.query.id
+        console.log(id)
         res.json({
           errno: 0,
-          data: seller
+          data: Object.assign({}, seller, {id})
         })
       })
       app.get('/api/goods', function (req, res) {

@@ -101,7 +101,6 @@ export default {
     // 说了半天实际上就是原理给的一个数组对象不行 需要把数组重新成对象
     barTxts () {
       let ret = []
-      console.log(this.goods, '我是goods')
       this.goods.forEach((good) => {
         const { type, name, foods } = good
         let count = 0
@@ -120,12 +119,10 @@ export default {
     },
     selectFoods () {
       let ret = []
-      console.log(this.good, '我是goods')
       this.goods.forEach((good) => {
         good.foods.forEach((food) => {
           if (food.count) {
             ret.push(food)
-            console.log(event)
           }
         })
       })

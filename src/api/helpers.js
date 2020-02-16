@@ -1,10 +1,15 @@
 import axios from 'axios'
 
-const ERR_OK = 0
+// const urlMap = {
+//     development: '/',
+//     production: 'http://ustbhuangyi.com/sell/'
+//   }
+  const baseUrl = 'http://47.103.117.222:12388/'
+ const ERR_OK = 0
 
 export function get (url) {
     return function (params) {
-        return axios.get(url, {
+        return axios.get(baseUrl + url, {
             params
         }).then((res) => {
             const { errno, data } = res.data

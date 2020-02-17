@@ -70,11 +70,14 @@
 </template>
 
 <script>
-import { getGoods } from 'api'
+// import { getGoods } from 'api'
+
 import shopCart from 'components/shop-cart/shop-cart'
 import CartControl from 'components/cart-control/cart-control'
 import supportIco from 'components/support-ico/support-ico'
 import bubble from 'components/bubble/bubble'
+const appData = require('../../../data.json')
+
 export default {
   name: 'goods',
   components: { shopCart, CartControl, supportIco, bubble },
@@ -133,12 +136,13 @@ export default {
         fetch () {
       if (!this.fetched) {
         this.fetched = true
-        getGoods({
-          id: this.seller.id
-        }).then((goods) => {
-          this.goods = goods
-        })
+        // getGoods({
+        //   id: this.seller.id
+        // }).then((goods) => {
+        //   this.goods = goods
+        // })
       }
+      this.goods = appData.goods
     },
      selectFood (food) {
       this.selectedFood = food

@@ -4,12 +4,12 @@ import axios from 'axios'
 //     development: '/',
 //     production: 'http://ustbhuangyi.com/sell/'
 //   }
-  const baseUrl = 'http://47.103.117.222:12388/'
+//   const baseUrl = 'http://47.103.117.222:12388/'
  const ERR_OK = 0
 
 export function get (url) {
     return function (params) {
-        return axios.get(baseUrl + url, {
+        return axios.get(url, {
             params
         }).then((res) => {
             const { errno, data } = res.data

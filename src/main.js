@@ -4,7 +4,6 @@ import './cube-ui'
 import './register'
 import 'common/stylus/index.styl'
 Vue.config.productionTip = false
-
 new Vue({
   render: h => h(App)
 }).$mount('#app')

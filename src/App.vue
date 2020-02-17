@@ -10,11 +10,12 @@
 <script>
 import VHeader from 'components/v-header/v-header'
 import tab from 'components/tab/tab'
-import { getSeller } from 'api'
+// import { getSeller } from 'api'
 import Goods from 'components/goods/goods'
 import Ratings from 'components/ratings/ratings'
 import Seller from 'components/seller/seller'
 import qs from 'query-string'
+const appData = require('../data.json')
 export default {
   name: 'app',
   data () {
@@ -25,10 +26,11 @@ export default {
     }
   },
   created () {
+    console.log(appData)
     this._getSeller()
-    getSeller().then((seller) => {
-      this.seller = seller
-    })
+    // getSeller().then((seller) => {
+    //   this.seller = seller
+    // })
   },
    computed: {
       tabs() {
@@ -37,21 +39,21 @@ export default {
             label: '商品',
             component: Goods,
             data: {
-              seller: this.seller
+              seller: appData.seller
             }
           },
           {
             label: '评论',
             component: Ratings,
             data: {
-              seller: this.seller
+              seller: appData.seller
             }
           },
           {
             label: '商家',
             component: Seller,
             data: {
-              seller: this.seller
+              seller: appData.seller
             }
           }
         ]
@@ -62,11 +64,13 @@ export default {
       window.console.log(this.seller)
     },
     _getSeller() {
-        getSeller({
-          id: this.seller.id
-        }).then((seller) => {
-          this.seller = Object.assign({}, this.seller, seller)
-        })
+        // getSeller({
+        //   id: this.seller.id
+        // }).then((seller) => {
+        //   this.seller = Object.assign({}, this.seller, seller)
+        // })
+        this.seller = Object.assign({}, this.seller, appData.seller)
+         return appData.seller
       }
 
   },

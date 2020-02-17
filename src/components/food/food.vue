@@ -85,7 +85,7 @@ import RatingSelect from 'components/rating-select/rating-select'
 import Split from 'components/split/spilt'
 import ratingMixin from 'common/mixins/rating'
 import popupMixin from 'common/mixins/popup'
-
+// const appData = require('../../../data.json')
 const EVENT_SHOW = 'show'
 const EVENT_ADD = 'add'
 const EVENT_LEAVE = 'leave'

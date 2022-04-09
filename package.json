@@ -13,7 +13,7 @@
     "core-js": "^3.4.4",
     "cube-ui": "~1.12.15",
     "good-storage": "^1.1.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "query-string": "^6.10.1",
     "ts-axios-new": "^0.1.5",
     "vue": "^2.6.10"
